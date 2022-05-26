@@ -25,7 +25,6 @@ class HostsHandler {
         this.send('starting', hosts.length)
         for (let hst of hosts) {
             this.send('title', [i, 'Connecting '+hst+'...'])
-            // let hostPty = pty.spawn('bash', [], {
             let hostPty = pty.spawn(SSH_CMD, [hst], {
                 name: 'xterm-256color',
                 cols: 80,
