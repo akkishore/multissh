@@ -30,7 +30,7 @@ Enter your host groups into .multissh.conf file in your HOME dir and launch 'mul
 
 ## Download
 
-Look at GitHub releases
+Look at GitHub releases.
 
 ## Contribute
 
