@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <link rel="icon" href="favicon.ico" type="image/ico" />
+  <title>MultiSSH</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.css" rel="stylesheet" />
+  <!-- <link href="https://cdn.jsdelivr.net/npm/xterm@4.10.0/css/xterm.min.css" rel="stylesheet" /> -->
+  <!-- <script src="https://cdn.jsdelivr.net/combine/npm/xterm-addon-fit@0.5.0,npm/xterm@4.10.0"></script> -->
+  <link rel="stylesheet" href="/public/xterm.css" />
+  <script src="/public/xterm.js"></script>
+  <script src="/public/xterm-addon-fit.js"></script>
+  <style>
+    body {
+      background-color: #111111;
+    }
+    .dropdown-item {
+      padding: .25rem 0.5rem;
+    }
+    .navbar {
+      padding: 0;
+    }
+    header {
+      border-bottom: 2px solid #AAAAAA;
+    }
+    .term-body {
+       /*height: 600px;*/
+      background-color: #000000;
+    }
+    .term {
+      /*width: 600px;*/
+      border:1px solid #444444;
+      border-top-left-radius: 7px;
+      border-top-right-radius: 7px;
+      display: inline-block;
+      background-color: #e6e6e6;
+    }
+    .term-title {
+      margin: 0 5px;
+      color: #000000;
+      font-size: 12px;
+    }
+    .inputarea {
+      width:400px;
+      /*height:40px;*/
+      background-color: #941107;
+      color: #FFFFFF;
+    }
+    #right_controls {
+      visibility:hidden ;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <!-- Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid justify-content-between">
+        <!-- Left elements -->
+        <div class="d-flex">
+          <!-- Brand -->
+          <!-- <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+            <i class="fas fa-cloud"></i>
+          </a> -->
+
+          <div class="dropdown">
+            <button
+              class="btn btn-light btn-sm dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Host groups
+            </button>
+            <ul id="host-groups" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            </ul>
+          </div>
+          <!-- Search form -->
+          <!-- <form class="input-group w-auto my-auto d-none d-sm-flex">
+            <input autocomplete="off" type="search" class="form-control rounded" placeholder="Search"
+              style="min-width: 125px;" />
+            <span class="input-group-text border-0 d-none d-lg-flex"><i class="fas fa-search"></i></span>
+          </form> -->
+        </div>
+        <!-- Left elements -->
+
+        <!-- Center elements -->
+        <div class="navbar-nav flex-row d-none d-md-flex text-light small">
+          <input class="inputarea" id="inputarea">
+        </div>
+        <!-- Center elements -->
+
+        <!-- Right elements -->
+        <ul class="navbar-nav flex-row" id="right_controls">
+          <li class="nav-item me-3 me-lg-1">
+            <a class="nav-link text-light" href="javascript:void(0)" id="font_up">
+              <span><i class="fas fa-sort-alpha-up"></i></span>
+            </a>
+          </li>
+          <li class="nav-item me-3 me-lg-1">
+            <a class="nav-link text-light" href="javascript:void(0)" id="font_down">
+              <span><i class="fas fa-sort-alpha-down"></i></span>
+            </a>
+          </li>
+          <li class="nav-item ms-3 me-3 me-lg-1">
+            <a class="nav-link text-light" href="javascript:window.open(window.location.href)">
+              <span><i class="fas fa-external-link-alt"></i></span>
+            </a>
+          </li>
+          <!--<li class="nav-item me-3 ms-3 me-lg-1">
+            <a class="nav-link text-light" href="#">
+              <span><i class="far fa-check-square"></i></span>
+            </a>
+          </li>
+          <li class="nav-item me-3 me-lg-1">
+            <a class="nav-link text-light" href="#">
+              <span><i class="fas fa-exchange-alt"></i></span>
+            </a>
+          </li>
+          <li class="nav-item me-3 me-lg-1">
+            <a class="nav-link text-light" href="#">
+              <span><i class="far fa-square"></i></span>
+            </a>
+          </li>-->
+        </ul>
+        <!-- Right elements -->
+      </div>
+    </nav>
+    <!-- Navbar -->
+  </header>
+  <main>
+    <!-- Modal -->
+    <div class="modal fade" id="no_conf" tabindex="-1" aria-labelledby="no_conf" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title">No multissh config</h6>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            No '.multissh.conf' file in your HOME folder. Please specify your host groups there. Sample config:
+            <pre>[
+  {"group": "Host group 1",
+   "hosts": [
+    "user@domain1.of.host.com",
+    "user@domain2.of.host.com"
+  ]},
+  {"group": "Host group 2",
+   "hosts": [
+    "user@another1.domain.of.host.com",
+    "user@another2.domain.of.host.com"
+  ]}
+]</pre>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-mdb-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="multiterm" id="multiterm">
+    </div>
+    <script>
+
+    </script>
+
+  </main>
+  <footer></footer>
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"></script>
+  <script src="/public/init.js"></script>
+  <script src="/public/host_config.js"></script>
+  <script src="/public/host_connect.js"></script>
+</body>
+
+</html>
+
+<!--<html>
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+    <style type="text/css">
+    body {
+        font-family: 'Roboto', sans-serif;
+        width:100%;
+        padding:0;
+        margin:0;
+    }
+    #top_options {
+        background-color: #000000;
+        border-bottom: 2px solid #FFFFFF;
+        color:#FFFFFF;
+        padding:5px 10px;
+    }
+    </style>
+</head>
+    <body>
+        <div id="top_options" style="background-color: black;border-bottom:2px solid white;color:white">
+            test
+        </div>
+    </body>
+</html>-->

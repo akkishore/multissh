@@ -1,0 +1,26 @@
+{
+  "name": "multissh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": "./app.js",
+  "pkg": {
+    "scripts": "public/*.js",
+    "assets": [
+      "public/*.css",
+      "public/*.html"
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "httpdispatcher": "^2.1.2",
+    "node-pty": "^0.10.0",
+    "open": "^7.4.1",
+    "pkg": "^4.4.9",
+    "ws": "^7.4.3"
+  }
+}
